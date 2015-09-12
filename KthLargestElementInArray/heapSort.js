@@ -12,7 +12,7 @@ Array.prototype.swap = function(i, j) {
 
 Array.prototype.heapSort = function() {
     this.buildMaxHeap();
-    for (vari = this.length - 1; i > 0; i--) {
+    for (var i = this.length - 1; i > 0; i--) {
         this.swap(0, i);
         this.heapAdjust(0, i);
     }
