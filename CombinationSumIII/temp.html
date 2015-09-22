@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta name="renderer" content="webkit" />
+  <title>宣传部OA系统</title>
+  <link rel="stylesheet" type="text/css" href="${ctx}/widgets/common/css/workflow-form-base.css" />
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/common.js" charset="utf-8"></script>
+  <!--以下必须-->
+  <script type="text/javascript" src="src/mapSelected.js" ></script>
+  <script type="text/javascript" src="${ctx}/form/jsp/widgets/common/js/doublelist.js" ></script>
+  <link href="images/core.css" rel="stylesheet" type="text/css" media="screen"/>
+  <script type="text/javascript" src="${ctx}/widgets/common/js/pdfobject.js"> </script>
+  <script type="text/javascript" defer="defer">
+        function showmore(){
+             if('[更多]'== $('#morecontext').html()){
+             
+              $('#morecontext').html('[收起]');
+              $('.hidecontex').show();
+
+             }else{
+                $('#morecontext').html('[更多]');
+                $('.hidecontex').hide();
+
+            }
+        }
+      function loadShrinkEvent () {
+        var $lDom = $('.areaL-1:visible');
+        var $rDom = $('.areaR-1');
+        var shrinkW = $lDom.outerWidth();
+        var rW = $rDom.outerWidth();
+        var $shrinkBtn = $('#shrinkBtn');
+        var btnStatus = 0;
+        $shrinkBtn.click(function (){
+          if(btnStatus ^ 1){
+            $lDom.animate({
+              'width' : 0
+            }, 'swing', function(){
+              $lDom.hide();
+            });
+            $('.areaR-1').animate({
+              'width' : '56%'
+            });
+            $shrinkBtn.removeClass('arrow-left').addClass('arrow-right');
+          } else {
+            $lDom.show();
+            $('.areaR-1').animate({
+              'width' : '30%'
+            });
+            $lDom.animate({
+              'width' : shrinkW
+            });
+            $shrinkBtn.removeClass('arrow-right').addClass('arrow-left');
+          }
+          btnStatus ^= 1;
+        });
+        //init
+        $lDom.css({
+          'width' : 0
+        }).hide();
+        $('.areaR-1').css({
+          'width' : '56%'
+        });
+        $shrinkBtn.click();
+        $shrinkBtn.removeClass('arrow-left').addClass('arrow-right');
+      }
+    window.onload=function(){ 
+      var listValues='<%=request.getSession().getAttribute("listValues")==null?"":request.getSession().getAttribute("listValues")%>';
+      var selects='<%=request.getParameter("selects")==null?"":request.getParameter("selects")%>';
+      var limitValue='<%=request.getParameter("limitValue")==null?"":request.getParameter("limitValue")%>';
+      var valuestr='<%=request.getParameter("values")==null?"":request.getParameter("values")%>'; 
+      var instanceId = '${instanceId}';  
+      if(instanceId.length!=13)tagvalues(listValues,selects,limitValue,valuestr,instanceId);//标签赋值，权限控制
+      if(instanceId.length==13){registerTag();}//注册标签选中效果
+      var  firstPdfPath ='${firstPdfPath}'
+        if(firstPdfPath != null && firstPdfPath != ""){
+              var iframe1 = document.getElementById("iframe1");
+              var params= {
+                  url:firstPdfPath,
+                  pdfOpenParams:{
+                    navpanes:0,
+                      toolbar:0,
+                      statusbar:0,
+                      view:"FotV"
+                  }
+                  
+              };
+              var myPDF = new PDFObject(params).embed("iframe1");
+       }
+       if(valuestr!= null && valuestr != ""){
+         if(valuestr != "" && valuestr.indexOf("sfjj:是") != -1){
+             $('#isjj').addClass("sfjjbtn");    
+         }
+        if( valuestr.indexOf(";mj:")!=-1){
+            var miji =valuestr.split(";mj:")[1].split(";")[0];
+         if(miji!=""){
+           $('#mimidj').html(miji);
+          $('#mimidj').addClass("btn2");
+         }
+        }
+        
+       }
+      var isOver = '${isOver}' ;
+      var printFile = document.getElementById("printFile"),
+          previewFile = document.getElementById("previewFile"),
+          blBtn = document.getElementById("blbtn"),
+          signFile = document.getElementById("signFile");
+      var isOver = '${isOver}' ;
+      
+      
+      if(isOver == 'true'){
+            if( document.getElementById("printFile")){
+              var printF = document.getElementById("printFile"),
+                previewF = document.getElementById("previewFile");
+              
+              printF.disabled='';
+              previewF.disabled='';
+             // document.getElementById("blbtn").disabled='disabled';
+             // document.getElementById("signFile").disabled='disabled';
+        if($('#signFile')){
+        $('#signFile').css('display','none');
+              }
+        if($('#blbtn')){
+        $('#blbtn').css('display','none');
+              }
+            }
+      }else{
+         var isSigned ='${isSigned}'; 
+        if(isSigned == 'false'){
+            document.getElementById("printFile").disabled='disabled';
+            document.getElementById("previewFile").disabled='disabled';
+            document.getElementById("blbtn").disabled='disabled';
+            document.getElementById("signFile").disabled='';
+            $('#printFile').addClass('btn-disabled');
+            $('#previewFile').addClass('btn-disabled');
+            $('#blbtn').addClass('btn-disabled');
+
+            $('#signFile').removeClass('btn-disabled');
+         }else if(isSigned == 'true')   {
+      if($('#signFile')){
+        $('#signFile').css('display','none');
+            }
+           // document.getElementById("signFile").disabled='disabled';
+            document.getElementById("printFile").disabled='';
+            document.getElementById("previewFile").disabled='';
+            document.getElementById("blbtn").disabled='';
+            $('#printFile').removeClass('btn-disabled');
+            $('#previewFile').removeClass('btn-disabled');
+            $('#blbtn').removeClass('btn-disabled');
+         }
+      }
+             loadShrinkEvent();
+    };
+
+  </script>
+  <!--以上必须-->
+</head>
+
+<body style="overflow-x:hidden !important;">
+  <!--内部公开文件-->
+  <div>
+    <div class="insideOpen_Con clearfix">
+      <div class="title-h">
+        <a href="javascript:" onclick="signDofile('${processId}')" name="signFile" id="signFile">签收</a>
+        <a href="javascript:" name="printFile" id="printFile" onclick="printFile('${instanceId}','${formId}','${nodeId}','${workFlowId}','${processId}')">打印</a>
+        <a href="javascript:" name="previewFile" id="previewFile" onclick="previewFile('${instanceId}','${formId}','${nodeId}','${workFlowId}','${processId}')">预览</a>
+        <a href="javascript:" id="blbtn" name="blbtn" onclick="blbtn('${instanceId}','${formId}','${nodeId}','${workFlowId}','${processId}')">办理</a>
+      </div>
+      <div class="shrinkBtn arrow-left" id="shrinkBtn" style="width:30px;height:56px;line-height:56px;text-align:center;position:absolute;left:0;top:320px;z-index:33;cursor:pointer;"></div>
+      <div class="areaL-1">
+        <table class="zk-table">
+          <tbody>
+            <tr>
+              <td class="td1 col1">文件名称</td>
+              <td class="td2 col2">${wjmc}</td>
+            </tr>
+            <tr>
+              <td class="td1 col1">文号</td>
+              <td class="td2 col2">${wh}</td>
+            </tr >
+            <tr>
+              <td class="td1 col1">主送单位</td>
+              <td class="td2 col2">${zsdw}</td>
+            </tr >
+            <tr>
+              <td class="td1 col1">抄送单位</td>
+              <td class="td2 col2">${csdw}</td>
+            </tr>
+            <tr>
+              <td class="td1 col1">密级</td>
+              <td class="td2 col2">${mj}</td>
+              <tr>
+                <td class="td1 col1">快慢等级</td>
+                <td class="td2 col2">${kmdj}</td>
+              </tr>
+              <tr>
+                <td class="td1 col1">主题词</td>
+                <td class="td2 col2">${ztc}</td>
+              </tr>
+              <tr  class="hidecontex">
+                <td class="td1 col1">打字</td>
+                <td class="td2 col2">${dz}</td>
+              </tr >
+              <tr  class="hidecontex">
+                <td class="td1 col1">印发份数</td>
+                <td class="td2 col2">${yffs}</td>
+              </tr>
+              <tr  class="hidecontex">
+                <td class="td1 col1">校对</td>
+                <td class="td2 col2">${jd}</td>
+              </tr>
+              <tr  class="hidecontex">
+                <td class="td1 col1">发文日期</td>
+                <td class="td2 col2">${fwrq}</td>
+              </tr>
+              <tr style="display:none;">
+                <td colspan="2" style="text-align:right;" >
+                  <span id="morecontext" style="color:#43a4c6;cursor: pointer;" onclick="showmore();">[更多]</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="areaL-1" style="display:none">
+          <table class="zk-table">
+            <tbody>
+
+              <tr>
+                <td class="td1 col1">文件名称</td>
+                <td class="td2 col2">
+                  <div>
+                    <textarea id="wjmc" name="wjmc" type="text" style="height:100px;width:180px;" class="inpt1" value="" ></textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td1 col1">文号</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="wh" name="wh" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr >
+              <tr>
+                <td class="td1 col1">主送单位</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="zsdw" name="zsdw" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr >
+              <tr>
+                <td class="td1 col1">抄送单位</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="csdw" name="csdw" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td1 col1">密级</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="mj" name="mj" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td1 col1">快慢等级</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="kmdj" name="kmdj" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="td1 col1" colspan="2">主题词</td>
+              </tr>
+              <tr>
+                <td class="td1 col2" colspan="2">
+                  <div class="font">
+                    <textarea id="ztc" name="ztc" style="width:260px;height:210px;" class="area1"></textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr  class="hidecontex">
+                <td class="td1 col1">打字</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="dz" name="dz" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr >
+              <tr  class="hidecontex">
+                <td class="td1 col1">印发份数</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="yffs" name="yffs" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr  class="hidecontex">
+                <td class="td1 col1">校对</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="jd" name="jd" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr class="hidecontex">
+                <td class="td1 col1">发文日期</td>
+                <td class="td2 col2">
+                  <div>
+                    <input id="fwrq" name="fwrq" type="text"  class="inpt1" value="" />
+                  </div>
+                </td>
+              </tr>
+              <tr style="display:none;">
+                <td colspan="2" style="text-align:right;" >
+                  <span id="morecontext" style="color:#43a4c6;cursor: point;" onclick="showmore();">[更多]</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="areaM-1">
+          <div class="mcon">
+            <div class="hd clearfix" style="display:none;">
+              <span id="isjj" ></span>
+              <span id="mimidj" ></span>
+            </div>
+            <div class="fj clearfix" style="display:none;">
+              <span id="fjshow" style="text-indent:0;padding-left:18px;display:block;"></span>
+              <trueway:att zname="文书材料" onlineEditAble="true" id="${instanceId}fj" docguid="${instanceId}fj" showId="fjshow" ismain="true" downloadAble="true" uploadAble="true" deleteAble="true" previewAble="true" tocebAble="false" toStampAble="true" openBtnClass="icon-add" otherBtnsClass="icon-help" uploadCallback="loadCss" deleteCallback="loadCss" nodeId="${nodeId}"/>
+
+            </div>
+
+             <div class="bd" >
+                 <div id="iframe1" style="height:100%;width:100%"></div>
+                 </div>
+
+          </div>
+        </div>
+        <div class="areaR-1">
+          <div class="wrapper">
+            <div class="row">
+                                                   <span class="title" style="height:25px">拟办意见</span>
+            </div>
+            <div class="row">
+              <ul class="msg-list">
+                <c:forEach items="${commonComment}" var="comment">
+                  <li class="msg-list-item">
+                    <div class="msg-detail">
+                      <div class="msg-header">
+                        <span class="username">
+                          <c:if test="${comment.deptName != null&&comment.deptName != ''}">${comment.deptName}-</c:if>
+                          ${comment.userName}
+                        </span>
+                        <span class="date">${fn:substring(comment.signdate,0,10)}</span>
+                      </div>
+                      <div class="msg-line">
+                        <span class="caret"></span>
+                        <span class="msg-text chat-box <c:if test="${comment.color != null&&comment.color != ''}">${comment.color}</c:if>
+                        <c:if test="${comment.color == null||comment.color == ''}">depart-a</c:if>
+                        ">
+                        <span class="bot"></span>
+                        <span class="top"></span>
+                        ${comment.content}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </c:forEach>
+            </ul>
+          </div>
+        </div>
+    </div>
+        <div class="areaR-1" style="display:none">
+          <div class="rcon">
+            <div class="title">签发</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="签发" typeinAble="true" deleteAbled="true" id="${instanceId}qf" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+
+          <div class="rcon">
+            <div class="title">分管部领导审签</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="分管部领导审签" typeinAble="true" deleteAbled="true" id="${instanceId}fgbldsq" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+
+          <div class="rcon">
+            <div class="title">秘书审核</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="秘书审核" typeinAble="true" deleteAbled="true" id="${instanceId}mssh" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+          <div class="rcon">
+            <div class="title">会签</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="会签" typeinAble="true" deleteAbled="true" id="${instanceId}hq" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+          <div class="rcon">
+            <div class="title">复核</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="复核" typeinAble="true" deleteAbled="true" id="${instanceId}fh" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+          <div class="rcon">
+            <div class="title">核稿</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="核稿" typeinAble="true" deleteAbled="true" id="${instanceId}hg" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+          <div class="rcon">
+            <div class="title">拟稿</div>
+            <div class="item">
+              <div>
+                <trueway:comment  zname="拟稿" typeinAble="true" deleteAbled="true" id="${instanceId}ng" instanceId="${instanceId}" currentStepId="${processId}"  />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="clear"></div>
+      </div>
+      <div class="bclose"></div>
+      <!--办理弹框-->
+      <div class="popt" id="blpop">
+        <div class="head"></div>
+        <div class="pcont">
+          <div class="row1 clearfix">
+            <span class="s1 font1">文件名称</span>
+            <input type="text" value="关于****工作的通知" class="s2" />
+          </div>
+          <div class="row2 clearfix">
+            <span class="s1 font1">密级</span>
+            <div class="radio radio-checked" name="radio1" value="1">普通</div>
+            <div class="radio" name="radio1" value="2">秘密、机密</div>
+          </div>
+          <div class="row3 clearfix">
+            <span class="s1 font1">拟办意见</span>
+            <textarea name="" cols="" rows="" class="s2"></textarea>
+          </div>
+          <div class="btn">
+            <a href="javascript:">保存</a>
+            <a href="javascript:">取消</a>
+            <a href="javascript:" id="btnnextpop">下一步</a>
+          </div>
+        </div>
+        <div class="ssclose"></div>
+      </div>
+      <!--办理弹框-->
+      <!--办理下一步弹框-->
+      <div class="popt" id="nextpop">
+        <div class="head"></div>
+        <div class="pcont">
+          <div class="row4 clearfix">
+            <span class="s1 font1">内部流转</span>
+            <select class="s2 font1">
+              <option>张杰</option>
+            </select>
+            <a href="javascript:" class="s3">转发</a>
+            <span class="s4 font1">转内勤</span>
+            <select class="s2 font1">
+              <option>张杰</option>
+            </select>
+            <a href="javascript:" class="s3" style="margin-right:0">转发</a>
+          </div>
+          <table class="com-table">
+            <thead>
+              <tr>
+                <th style="width:120px;">办理部门</th>
+                <th style="width:114px;">办理人</th>
+                <th style="width:130px;">签收日期</th>
+                <th style="width:136px;">转发日期</th>
+                <th>流程状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>信息处</td>
+                <td>OA管理员</td>
+                <td>2014-11-25</td>
+                <td>2014-11-25</td>
+                <td>办理中</td>
+              </tr>
+              <tr>
+                <td>信息处</td>
+                <td>OA管理员</td>
+                <td>2014-11-25</td>
+                <td>2014-11-25</td>
+                <td>办理中</td>
+              </tr>
+              <tr>
+                <td>信息处</td>
+                <td>OA管理员</td>
+                <td>2014-11-25</td>
+                <td>2014-11-25</td>
+                <td>办理中</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn" style="padding-top:25px;">
+            <a href="javascript:" id="complete">完成</a>
+          </div>
+        </div>
+        <div class="ssclose"></div>
+      </div>
+      <!--办理下一步弹框-->
+
+      <!--内部公开文件-->
+      <div id="mask"></div>
+      <INPUT type="hidden" id="instanceId" name="instanceId" value="">
+      <INPUT type="hidden" id="formId" name="formId" value="">
+      <INPUT type="hidden" id="workFlowId" name="workFlowId" value="">
+      <INPUT type="hidden" id="processId" name="processId" value="">
+<INPUT type="hidden" id="zs" name="zs" value="">
+
+<INPUT type="hidden" id="cs" name="cs" value="">
+
+      <div style="display:none;" id="OBJECTbox">
+        <OBJECT id="OCXpdfobj" style="z-index:7;" classid="clsid:ECCC5C8C-8DA0-4FAC-935A-CD5229A14BD7" width="0" height="10"></OBJECT>
+      </div>
+
+      <script type="text/javascript"> 
+
+  //以下必须有
+  function loadCss(){  
+      seajs.use('lib/form',function(){  
+      $('input[mice-btn]').cssBtn();
+      $('input[mice-input]').cssInput();
+      $('select[mice-select]').cssSelect();
+      });
+  }
+
+    function signDofile(processId){
+    // 更新applytime
+    $.ajax({//
+      url : '${ctx}/tablehtml_signDofile.do?processId='+processId+'&d='+ new Date(),
+      type : 'POST',
+      cache : false,
+      async : false,
+      error : function() {
+        alert('AJAX调用错误(tablehtml_signDofile.do)');
+        return false;
+      },
+      success : function(msg) {
+        // 更新按钮 disable = true
+        if(msg == "success"){
+           var printFile = document.getElementById("printFile"),
+               previewFile = document.getElementById("previewFile"),
+               blBtn = document.getElementById("blbtn");
+
+          printFile.disabled='';
+          previewFile.disabled='';
+          blBtn.disabled='';
+
+          $(printFile).removeClass('btn-disabled');
+          $(previewFile).removeClass('btn-disabled');
+          $(blBtn).removeClass('btn-disabled');
+         // document.getElementById("signFile").disabled='disabled';
+      if($('#signFile')){
+        $('#signFile').css('display','none');
+            }
+          alert("签收成功");
+
+        var twyj = '${twyj}';
+        if(twyj != null && twyj != ""){
+           alert("退文意见:"+twyj);
+        }
+        }else{
+          
+        }
+      }
+    });
+  }
+
+function printFile(instanceId,formId,nodeId,workflowId,processId){
+    var params = {};
+    params['processId'] = processId;
+    params['workFlowId'] = workflowId;
+    params['nodeId'] = nodeId ;
+    params['instanceId'] = instanceId;
+    params['formId'] = formId;
+    $.ajax({
+        url: '${ctx}/table_printFile.do?a='+Math.random(),
+        type: 'POST',
+        cache : false,
+      async : false,
+        data : params,
+        error: function(o,e){
+            alert('表单打印失败');
+        },
+        success: function(data){
+
+          OCXpdfobj.PrintPDF(data);
+
+        }
+    }); 
+  }
+ function previewFile(instanceId,formId,nodeId,workflowId,processId){
+      var params = {};
+    params['processId'] = processId;
+    params['workFlowId'] = workflowId;
+    params['nodeId'] = nodeId ;
+    params['instanceId'] = instanceId;
+    params['formId'] = formId;
+    $.ajax({
+        url: '${ctx}/table_printFile.do?a='+Math.random(),
+        type: 'POST',
+        cache : false,
+      async : false,
+        data : params,
+        error: function(o,e){
+            alert('表单预览失败');
+        },
+        success: function(data){
+        //window.showModalDialog(data,null,"dialogTop=0;dialogLeft=0;dialogWidth="+screen.width+";dialogHeight="+screen.height+";help:no;status:no;scroll:no");
+
+        window.open(data,"newwindow","dialogWidth:800px;dialogHeight:500px;resizeable:yes;help:no;status:no;scroll:no");
+
+        }
+    }); 
+  }
+
+  function blbtn(instanceId,formId,nodeId,workflowId,processId){
+      // 办理
+      var isHb = '${isHb}';
+    var url = "";
+     if(isHb!=null&&isHb=="1"){
+             url  = '${curl}/tablehtml_hbPage.do?type=hbcs&processId='+processId+'&workFlowId='+workflowId+'&formId='+formId+'&instanceId='+instanceId+'&nodeId='+nodeId+'&t='+new Date();
+     config = {'width':800,'height':500};
+     }else{
+        url  = '${curl}/tablehtml_handlePage.do?processId='+processId+'&workFlowId='+workflowId+'&formId='+formId+'&instanceId='+instanceId+'&nodeId='+nodeId+'&t='+new Date();
+      config = {'width':800,'height':500};
+      }     
+      // 用div代替showModalDialog
+      window.parent.loadInsideModal(url,config);
+  }
+  //以上必须有
+</script>
+</body>
+</html>
