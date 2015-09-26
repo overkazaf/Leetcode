@@ -10,6 +10,7 @@ var hIndex = function(citations) {
     var l = citations.length;
     var h = l;
     if (l) {
+    	citations.sort(function(a, b){return a - b;});
     	for (var i = 0; i < l; i++) {
     		if (citations[i] >= h) {
     			return h;
