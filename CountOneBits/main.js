@@ -1,9 +1,14 @@
 function count1s(n) {
-    var iCount=0,iFactor=1,iLowerNum=0,iCurrNum=0,iHigherNum=0;
-    while( n/iFactor != 0){
-        iLowerNum = n-(n/iFactor)*iFactor;
-        iCurrNum = (n/iFactor)%10;
-        iHigherNum = n/(iFactor*10);
+    var iCount = 0,
+        iFactor = 1,
+        iLowerNum = 0,
+        iCurrNum = 0,
+        iHigherNum = 0;
+
+    while( Math.floor(n/iFactor) != 0){
+        iLowerNum = n - (Math.floor(n/iFactor))*iFactor;
+        iCurrNum = (Math.floor(n/iFactor))%10;
+        iHigherNum = Math.floor(n/(iFactor*10));
        
         switch(iCurrNum)
         {
@@ -24,4 +29,4 @@ function count1s(n) {
     return iCount; 
 };
 
-console.log(count1s(10000));
+console.log(count1s(11));
