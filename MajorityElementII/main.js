@@ -3,46 +3,33 @@
  * @return {number[]}
  */
 var majorityElement = function(nums) {
-    if (nums.length < 2) 
-        return nums;
-        
-    var a = nums[0];
-    var b, first = true;
-    var cnt1 = 0, cnt2 = 0, l = nums.length;
-    for (var i = 0; i < l; i++) {
-        if (first && nums[i] !== a) {
-            b = nums[i]; cnt2 = 1;first = false;
-        } else {
-            cnt1++;continue;
-        }
-        
-        if (nums[i] === a || nums[i] === b) {
-            if (nums[i] === a){
-                cnt1++;cnt2--;
-            }
-            if (nums[i] === b){
-                cnt2++;cnt1--;
-            }
-        } else {
-            cnt1--;cnt2--;
-            if(cnt1 < 0)cnt1 = 0;
-            if(cnt2 < 0)cnt2 = 0;
-            if(cnt1 === 0 && cnt2 === 0){
-                first = true;
-                a = nums[i];
-            } else {
-                if(cnt1 === 0){
-                    a = b; cnt1 = cnt2;
-                    cnt2 = 0;
-                }
-                if(cnt2 === 0){
-                    b = nums[i]; cnt2 = 1;
-                }
-            }
-        }
+    var n1,
+        n2,
+        c1      = 0,
+        c2      = 0,
+        i       = 0,
+        t1      = 0,
+        t2      = 0,
+        l       = nums.length,
+        edge    = Math.floor(l/3),
+        res     = [];
+
+    for (; i < l; i++) {
+        if(c1 === 0){n1 = nums[i]; ++c1; continue;}
+        if(c2 === 0){n2 = nums[i]; ++c2; continue;}
+        if(c1 !== 0 && n1 === nums[i]) {++c1; continue;}
+        if(c2 !== 0 && n2 === nums[i]) {++c2; continue;}
+        --c1;--c2;
     }
-    var res = [];
-    cnt1 > 0 && res.push(a);
-    cnt2 > 0 && res.push(b);
+
+    for (i = 0; i < l; i++) {
+        if(c1 > 0) {if(n1 === nums[i]) ++t1;}
+        if(c2 > 0) {if(n2 === nums[i]) ++t2;}
+    }
+
+    if(t1 > edge) res.push(n1);
+    if(t2 > edge) res.push(n2);
+
+
     return res;
 };
