@@ -2,7 +2,7 @@
  * @param {string} input
  * @return {number[]}
  */
-var res;
+
 var diffWaysToCompute = function(input) {
   if (input === '') {
   	return [];
@@ -13,6 +13,7 @@ var diffWaysToCompute = function(input) {
 
 
 var helper = function (input, s, e){
+	var res = [];
 	try {
 		if (!isNaN(input.substring(s, e+1))){
 			var n = parseInt(input.substring(s, e+1)); 
