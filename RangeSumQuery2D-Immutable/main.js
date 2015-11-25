@@ -4,37 +4,34 @@
  */
 var NumMatrix = function(matrix) {
 	var i, j, 
-		m = matrix.length, n;
+		m = matrix.length, 
+		n;
     this.sum = [];
     for (i = 0; i<m; i++) {
     	this.sum[i] = [];
     	n = matrix[i].length;
     	for (j=0; j<n; j++) {
-    		if (i > 0 && j > 0) {
+    		if (!i && !j) {
+    			this.sum[0][0] = matrix[0][0];
+    			continue;
+    		}
+
+    		if (i && j) {
     			this.sum[i][j] = matrix[i][j] + this.sum[i][j-1] + this.sum[i-1][j] - this.sum[i-1][j-1];
     		} else {
-    			if (i == 0 && j == 0) {
-    				this.sum[i][j] = matrix[i][j];
-    			} else {
-    				if (i == 0) {
-    					this.sum[i][j] = matrix[i][j] + this.sum[i][j-1];
-    				}
-
-    				if (j == 0) {
-    					this.sum[i][j] = matrix[i][j] + this.sum[i-1][j];
-    				}
-    			}
+    			if (i === 0) {
+					this.sum[i][j] = matrix[i][j] + this.sum[i][j-1];
+				} else {
+					// j === 0
+					this.sum[i][j] = matrix[i][j] + this.sum[i-1][j];
+				}
     		}
     	}
     }
 };
 
 NumMatrix.prototype.getSum  = function (row, col) {
-	if (row < 0 || col < 0) {
-		return 0;
-	} else {
-		return this.sum[row][col];
-	}
+	return (row < 0 || col < 0) ? 0 : this.sum[row][col];
 }
 /**
  * @param {number} row1
