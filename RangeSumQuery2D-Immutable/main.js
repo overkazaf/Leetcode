@@ -3,9 +3,11 @@
  * @param {number[][]} matrix
  */
 var NumMatrix = function(matrix) {
-	var i, j, 
+	var i, 
+        j, 
 		m = matrix.length, 
 		n;
+
     this.sum = [];
     for (i = 0; i<m; i++) {
     	this.sum[i] = [];
@@ -29,6 +31,7 @@ var NumMatrix = function(matrix) {
     	}
     }
 };
+
 
 NumMatrix.prototype.getSum  = function (row, col) {
 	return (row < 0 || col < 0) ? 0 : this.sum[row][col];
