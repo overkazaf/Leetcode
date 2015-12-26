@@ -13,7 +13,7 @@ var removeDuplicateLetters = function(s) {
 };
 
 function dp (s, start) {
-	if (!s) {
+	if (start == s.length) {
 		var ss = new String(tmp);
 		res.push(ss);
 	} else {
@@ -23,11 +23,13 @@ function dp (s, start) {
 			if (idx == -1) {
 				tmp += c;
 			} else {
-				dp(s.substring(i+1));
-				var arr = tmp.split('');
-				arr.splice(idx,1);
-				tmp = arr.join('') + c;
-				dp(s.substring(i+1));
+				if (idx != tmp.length-1) {
+					dp(s, i+1);
+					var arr = tmp.split('');
+					arr.splice(idx,1);
+					tmp = arr.join('') + c;
+					dp(s, i+1);
+				}
 			}
 		}
 	}
