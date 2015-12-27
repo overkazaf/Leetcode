@@ -33,7 +33,7 @@ var insert = function (node, word) {
 			node.children[char2Index(ch)] = createNode(ch);
 		}
 		p = node.children[char2Index(ch)];
-		
+
 		insert(p, word.substring(1));
 	}
 }
@@ -51,13 +51,22 @@ var search = function (root, word) {
 	}
 };
 
+var startsWith = function(root, prefix) {
+	while (prefix.length && root) {
+		root = root.children[char2Index(prefix[0])]
+		prefix = prefix.substring(1);
+	}
+	return root != null;
+};
+
 
 var main = function () {
 	var root = createNode('#');
-	var words = ["the", "a", "there", "answer", "any", "by", "bye", "their"];
+	var words = ["the", "a", "there", "answer", "any", "by", "bye", "their","their","their","their"];
 	for (var i = 0, l = words.length; i < l; i++) {
 		insert(root, words[i]);
 	}
+	console.log(search(root, 'their'));
 	
 };
 

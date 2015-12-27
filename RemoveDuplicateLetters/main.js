@@ -2,37 +2,44 @@
  * @param {string} s
  * @return {string}
  */
-var res, tmp;
 var removeDuplicateLetters = function(s) {
-	res = [];
-	tmp = '';
-	dp(s,0);
-	res.sort();
-	console.log(res);
-	return res[0];
-};
+	var i, 
+		c, 
+		l = s.length, 
+		lastChar,
+		map = {}, 
+		visited = {};
 
-function dp (s, start) {
-	if (start == s.length) {
-		var ss = new String(tmp);
-		res.push(ss);
-	} else {
-		for (var i = start, l = s.length; i<l ;i++) {
-			var c = s.charAt(i);
-			var idx = tmp.indexOf(c);
-			if (idx == -1) {
-				tmp += c;
-			} else {
-				if (idx != tmp.length-1) {
-					dp(s, i+1);
-					var arr = tmp.split('');
-					arr.splice(idx,1);
-					tmp = arr.join('') + c;
-					dp(s, i+1);
-				}
-			}
+	res = ['0'];
+
+	for (i = 0; i < l; i++) {
+		c = s[i];
+		visited[c] = false;
+		
+		if (! (c in map)) {
+			map[c] = 0; 
 		}
+		
+		map[c]++;
 	}
-}
 
-console.log(removeDuplicateLetters('cbacdcbc'))
+	for (i = 0; i < l; i++) {
+		c = s[i];
+		map[c]--;
+		if (visited[c]) continue;
+        lastChar = res[res.length-1];
+		
+        // 如果只有一次的，直接跳过while， push进去。
+        // 如果有多次的， 检查当前字符的字典序是否小于当前的最后一个字符，如果小于，则重置位置
+		while (c < lastChar && map[lastChar]) {
+			visited[lastChar] = false;
+            res.pop();
+		}
+
+		res.push(c);
+		visited[c] = true;
+	}
+
+	return res.join('').substring(1);
+
+};
