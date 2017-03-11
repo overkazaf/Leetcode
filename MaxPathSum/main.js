@@ -11,19 +11,30 @@
  */
 var maxPathSum = function(root) {
 	if (root === null) {
-		return 0;
+	  return 0;
 	}
 
-	var maxLeft = dfs(root.left);
-	var maxRight = dfs(root.right);
-	return root.val + maxLeft + maxRight;
+	var l = dfs(root.left);
+	var r = dfs(root.right);
+
+	if (l >= 0 && r >= 0) {
+	    return root.val + l + r;
+	} else {
+	    return Math.max(node.val, Math.max(node.val+l, node.val+r));
+	}
 };
+
 
 var dfs = function(node) {
 	if (node === null) return 0;
 	else {
+        if (node.left === null && node.right === null) {
+		    // leaf node just return it's value
+			return node.val;
+		}
+
 		var l = dfs(node.left);
 		var r = dfs(node.right);
-		return node.val + Math.max(l, r);
+		return Math.max(l, r);
 	}
 };
