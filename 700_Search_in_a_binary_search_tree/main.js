@@ -21,5 +21,5 @@ var searchBST = function(root, val) {
         }
     }
 
-    return null;
+    return [];
 };
